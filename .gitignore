@@ -1,0 +1,46 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Tool caches
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build and packaging files
+build/
+dist/
+*.egg-info/
+
+# Environment variables and local config
+.env
+.env.*
+!.env.example
+
+# Raw survey data
+data/raw/**
+!data/raw/
+!data/raw/.gitkeep
+
+# Generated outputs
+outputs/**
+!outputs/
+!outputs/tables/
+!outputs/tables/.gitkeep
+!outputs/qualitative/
+!outputs/qualitative/.gitkeep
+
+# macOS, Windows, and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
