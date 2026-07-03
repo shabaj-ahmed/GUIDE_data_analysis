@@ -1,0 +1,12 @@
+[paths]
+deafblind_csv = "data/raw/GUIDE_deafblind_participants_results.csv"
+carers_csv = "data/raw/GUIDE_carers_results.csv"
+output_dir = "outputs"
+
+[duration_thresholds.deafblind_participants]
+min_minutes = 5
+max_minutes = 120
+
+[duration_thresholds.carers]
+min_minutes = 3
+max_minutes = 90
