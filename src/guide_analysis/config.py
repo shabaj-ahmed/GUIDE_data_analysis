@@ -8,10 +8,18 @@ import tomllib
 
 @dataclass(frozen=True)
 class DurationThresholds:
-    """Duration threshold settings for one survey cohort."""
+    """Duration threshold settings for one survey respondent group."""
 
     min_minutes: float | None
     max_minutes: float | None
+
+
+@dataclass(frozen=True)
+class ExcludedResponseIds:
+    """Response IDs explicitly excluded from analysis."""
+
+    deafblind_participants: frozenset[str]
+    carers: frozenset[str]
 
 
 @dataclass(frozen=True)
@@ -21,8 +29,12 @@ class AnalysisConfig:
     deafblind_csv: Path
     carers_csv: Path
     output_dir: Path
+
     deafblind_duration_thresholds: DurationThresholds
     carers_duration_thresholds: DurationThresholds
+
+    excluded_response_ids: ExcludedResponseIds
+
 
 
 def load_analysis_config(path: Path) -> AnalysisConfig:
@@ -31,17 +43,12 @@ def load_analysis_config(path: Path) -> AnalysisConfig:
         data = tomllib.load(file)
 
     paths = data["paths"]
-    duration_thresholds = data.get("duration_thresholds", {})
+    
+    duration_thresholds = data.get("duration_thresholds", {} )
+    deafblind_thresholds = duration_thresholds.get( "deafblind_participants", {} )
+    carers_thresholds = duration_thresholds.get( "carers", {} )
 
-    deafblind_thresholds = duration_thresholds.get(
-        "deafblind_participants",
-        {},
-    )
-
-    carers_thresholds = duration_thresholds.get(
-        "carers",
-        {},
-    )
+    excluded_response_ids = data.get("excluded_response_ids", {} )
 
     return AnalysisConfig(
         deafblind_csv=Path(paths["deafblind_csv"]),
@@ -52,6 +59,16 @@ def load_analysis_config(path: Path) -> AnalysisConfig:
         ),
         carers_duration_thresholds=parse_duration_thresholds(
             carers_thresholds
+        ),
+        excluded_response_ids=ExcludedResponseIds(
+            deafblind_participants=frozenset(
+                str(response_id)
+                for response_id in excluded_response_ids.get( "deafblind_participants", [], )
+            ),
+            carers=frozenset(
+                str(response_id)
+                for response_id in excluded_response_ids.get( "carers", [], )
+            ),
         ),
     )
 
