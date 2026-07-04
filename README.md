@@ -5,7 +5,6 @@ The pipeline processes categorical survey data exported as CSV files and generat
 
 ## Study background
 The survey was conducted with two respondent groups:
-
 1. People with dual sensory loss, including people with combined sight and hearing impairment.
 2. Carers or supporters of people with dual sensory loss.
 
@@ -52,13 +51,9 @@ CSV files can be inspected in VS Code using the Edit CSV extension.
 ### Running the analysis
 Run the analysis from the project root:
 ~~~ shell
-python -m guide_analysis \
-  --deafblind-min-duration-minutes 5 \
-  --deafblind-max-duration-minutes 120 \
-  --carers-min-duration-minutes 3 \
-  --carers-max-duration-minutes 90
+python -m guide_analysis --config config/analysis.toml
 ~~~
-The threshold values can be changed depending on the expected completion time for each survey.
+Duration thresholds can be changed in `config/analysis.toml` according to the expected completion time for each survey.
 
 Flagged responses should be reviewed manually before deciding whether to exclude them from the final analysis.
 
@@ -95,6 +90,7 @@ outputs/tables/carers__ordinal_summary.csv
 outputs/tables/carers__rating_distribution.csv
 outputs/tables/carers__multi_select_summary.csv
 ~~~
+
 With additional exploratory analysis and figures in:
 ~~~
 outputs/tables/*__crosstabs.csv
@@ -169,11 +165,14 @@ GUIDE_data_analysis/
 │   │   └── .gitkeep
 │   └── figures/
 │       └── .gitkeep
+├── config/
+│   └── analysis.toml
 └── src/
     └── guide_analysis/
         ├── __init__.py
         ├── __main__.py
         ├── cli.py
+        ├── config.py
         └── survey_processing/
             ├── __init__.py
             ├── columns.py
@@ -190,13 +189,15 @@ GUIDE_data_analysis/
 ~~~
 
 ## Folder and file guide
-| Path	                                                | Purpose                                                                                             |
-| ----                                                  | ----                                                                                                |
+| Path	                                                  | Purpose                                                                                             |
+| ----                                                    | ----                                                                                                |
 | `data/raw/`	                                            | Raw survey CSV exports.                                                                             |
 | `outputs/preprocessing/`                                | Preprocessing outputs, including duration summaries and flagged responses.                          |
 | `outputs/tables/`	                                      | Generated categorical, ordinal, rating, multi-select, cross-tabulation, and effect size tables.     |
 | `outputs/figures/`                                      | Generated charts and figures.                                                                       |
+| `config/analysis.toml`                                  | Stores input paths, output paths, and configurable analysis settings.                               |
 | `src/guide_analysis/cli.py`                             |	Defines the command-line interface.                                                                 |
+| `src/guide_analysis/config.py`                          | Loads and validates analysis settings from the TOML configuration file.                             |
 | `src/guide_analysis/survey_processing/columns.py`       |	Defines which survey columns are categorical, ordinal, rating, multi-select, metadata, or excluded. |
 | `src/guide_analysis/survey_processing/cleaning.py`      | Cleans column names, text spacing, missing values, and category labels where required.              |
 | `src/guide_analysis/survey_processing/io.py`            | Loads raw CSV files and writes output CSV files.                                                    |
