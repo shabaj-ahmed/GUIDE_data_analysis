@@ -58,14 +58,6 @@ def run_analysis(config: AnalysisConfig) -> None:
             max_duration_minutes=( duration_thresholds.max_minutes ),
         )
 
-        dataset_overview_rows.append(
-            build_dataset_overview_row(
-                respondent_group=respondent_group,
-                csv_path=csv_path,
-                df=cleaned_dataframe,
-            )
-        )
-
         duration_summary_all_rows.append(
             build_duration_summary_row(
                 df=cleaned_dataframe,
@@ -87,6 +79,15 @@ def run_analysis(config: AnalysisConfig) -> None:
         print( f"  Excluded responses: {len(cleaned_dataframe) - len(analysis_dataframe)}" )
 
         print( f"  Analysis responses: {len(analysis_dataframe)}" )
+
+        dataset_overview_rows.append(
+            build_dataset_overview_row(
+                respondent_group=respondent_group,
+                csv_path=csv_path,
+                cleaned_dataframe=cleaned_dataframe,
+                analysis_dataframe=analysis_dataframe,
+            )
+        )
 
     write_csv(
         pd.DataFrame(dataset_overview_rows),

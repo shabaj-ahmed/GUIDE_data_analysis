@@ -82,14 +82,17 @@ def add_completion_duration(df: pd.DataFrame) -> pd.DataFrame:
 def build_dataset_overview_row(
     respondent_group: str,
     csv_path: Path,
-    df: pd.DataFrame,
+    cleaned_dataframe: pd.DataFrame,
+    analysis_dataframe: pd.DataFrame,
 ) -> dict[str, object]:
     """Create a high-level overview for one survey dataset."""
     return {
         "respondent_group": respondent_group,
-        "csv_path": str(csv_path),
-        "response_count": len(df),
-        "column_count": len(df.columns),
+        "csv_path": str( csv_path ),
+        "all_response_count": len( cleaned_dataframe ),
+        "excluded_response_count": ( len(cleaned_dataframe) - len(analysis_dataframe) ),
+        "analysis_response_count": len( analysis_dataframe ),
+        "column_count": len( cleaned_dataframe.columns ),
     }
 
 
